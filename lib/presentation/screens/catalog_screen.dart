@@ -86,11 +86,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
           // Floating Bottom Navigation Bar
           Positioned(
-            left: 24,
-            right: 24,
+            left: 20,
+            right: 20,
             bottom: 24,
             child: FloatingBottomNav(
               selectedIndex: _navIndex,
+              favoritesCount: _products.where((p) => p.isFavorite).length,
               onIndexChanged: (index) {
                 setState(() => _navIndex = index);
               },
