@@ -5,7 +5,7 @@ import '../../core/constants/app_colors.dart';
 
 /// Reusable Floating Bottom Navigation Bar Widget matching Dribbble reference:
 /// Consists of a freestanding circular dark button on the left (Shopping bag)
-/// and a freestanding white pill container on the right (Favorites with count, Cart, Settings).
+/// and a prominent, taller freestanding white pill container on the right (Favorites with count, Cart, Settings).
 class FloatingBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onIndexChanged;
@@ -22,19 +22,19 @@ class FloatingBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // 1. Freestanding Left Circular Black Button
+        // 1. Freestanding Left Circular Black Button (Index 0)
         GestureDetector(
           onTap: () => onIndexChanged(0),
           child: Container(
-            width: 56,
-            height: 56,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: AppColors.pureBlack,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.18),
-                  blurRadius: 14,
+                  color: Colors.black.withValues(alpha: 0.16),
+                  blurRadius: 16,
                   offset: const Offset(0, 6),
                 ),
               ],
@@ -51,10 +51,10 @@ class FloatingBottomNav extends StatelessWidget {
 
         const SizedBox(width: 12),
 
-        // 2. Freestanding Right White Pill Container
+        // 2. Freestanding Right White Pill Container (Taller & more prominent)
         Expanded(
           child: Container(
-            height: 56,
+            height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -62,68 +62,75 @@ class FloatingBottomNav extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 16,
+                  blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Heart Icon with count "0"
-                GestureDetector(
-                  onTap: () => onIndexChanged(1),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        selectedIndex == 1
-                            ? CupertinoIcons.heart_fill
-                            : CupertinoIcons.heart,
-                        size: 20,
-                        color: AppColors.pureBlack,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$favoritesCount',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.pureBlack,
+            // Unconditionally solid black icons and text
+            child: IconTheme(
+              data: const IconThemeData(
+                color: Colors.black,
+                opacity: 1.0,
+                size: 22,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // Heart Icon with count (Always solid black filled heart)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onIndexChanged(1),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          CupertinoIcons.heart_fill,
+                          size: 22,
+                          color: Colors.black,
                         ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '$favoritesCount',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Bag / Store Icon (Always solid black filled bag)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onIndexChanged(2),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        CupertinoIcons.bag_fill,
+                        size: 22,
+                        color: Colors.black,
                       ),
-                    ],
+                    ),
                   ),
-                ),
 
-                // Bag / Store Icon
-                GestureDetector(
-                  onTap: () => onIndexChanged(2),
-                  child: Icon(
-                    selectedIndex == 2
-                        ? CupertinoIcons.bag_fill
-                        : CupertinoIcons.bag,
-                    size: 20,
-                    color: selectedIndex == 2
-                        ? AppColors.pureBlack
-                        : AppColors.pureBlack.withValues(alpha: 0.85),
+                  // Settings Gear Icon (Always solid black filled gear)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onIndexChanged(3),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        CupertinoIcons.gear_alt_fill,
+                        size: 22,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                ),
-
-                // Settings Gear Icon
-                GestureDetector(
-                  onTap: () => onIndexChanged(3),
-                  child: Icon(
-                    selectedIndex == 3
-                        ? CupertinoIcons.gear_alt_fill
-                        : CupertinoIcons.gear_alt,
-                    size: 20,
-                    color: selectedIndex == 3
-                        ? AppColors.pureBlack
-                        : AppColors.pureBlack.withValues(alpha: 0.85),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

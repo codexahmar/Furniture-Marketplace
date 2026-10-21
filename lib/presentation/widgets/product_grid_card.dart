@@ -5,7 +5,9 @@ import '../../core/constants/app_colors.dart';
 import '../../domain/models/product.dart';
 import 'product_image.dart';
 
-/// Reusable Product Grid Card Widget
+/// Reusable Product Grid Card Widget matching Dribbble reference:
+/// Pinned discount badge top-right, chair image, product name, price,
+/// and favorite button pinned at the bottom end of each card.
 class ProductGridCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
@@ -24,11 +26,11 @@ class ProductGridCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(255, 243, 244, 246),
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -36,7 +38,7 @@ class ProductGridCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Discount Tag (Top Right)
+            // 1. Discount Tag (Top Right)
             Positioned(
               top: 12,
               right: 12,
@@ -57,75 +59,75 @@ class ProductGridCard extends StatelessWidget {
               ),
             ),
 
-            // Center Chair Content
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 18, 14, 12),
-              child: Column(
-                children: [
-                  // Chair Image
-                  Expanded(
-                    child: Center(
-                      child: ProductImage(
-                        assetPath: product.assetPath,
-                        fallbackUrl: product.fallbackUrl,
-                        fit: BoxFit.contain,
+            // 2. Chair Content (Image, Name, Price)
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 16, 14, 48),
+                child: Column(
+                  children: [
+                    // Chair Image
+                    Expanded(
+                      child: Center(
+                        child: ProductImage(
+                          assetPath: product.assetPath,
+                          fallbackUrl: product.fallbackUrl,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
+                    const SizedBox(height: 6),
 
-                  // Name
-                  Text(
-                    product.name,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.pureBlack,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-
-                  // Price
-                  Text(
-                    '\$${product.price}',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.pureBlack,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Circular Favorite Button
-                  GestureDetector(
-                    onTap: onFavoriteToggle,
-                    child: Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: product.isFavorite
-                            ? AppColors.pureBlack
-                            : Colors.transparent,
-                        shape: BoxShape.circle,
-                        border: product.isFavorite
-                            ? null
-                            : Border.all(
-                                color: const Color(0xFFDCDFE3),
-                                width: 1.2,
-                              ),
-                      ),
-                      child: Icon(
-                        product.isFavorite
-                            ? CupertinoIcons.heart_fill
-                            : CupertinoIcons.heart,
-                        size: 15,
-                        color: product.isFavorite
-                            ? Colors.white
-                            : AppColors.pureBlack,
+                    // Name
+                    Text(
+                      product.name,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.pureBlack,
                       ),
                     ),
+                    const SizedBox(height: 2),
+
+                    // Price
+                    Text(
+                      '\$${product.price}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.pureBlack,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // 3. Circular Favorite Button (Pinned at the end of each card)
+            Positioned(
+              bottom: 12,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: onFavoriteToggle,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: product.isFavorite
+                          ? AppColors.pureBlack
+                          : const Color(0xFFF0F1F3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      product.isFavorite
+                          ? CupertinoIcons.heart_fill
+                          : CupertinoIcons.heart,
+                      size: 16,
+                      color: product.isFavorite ? Colors.white : Colors.black,
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
           ],

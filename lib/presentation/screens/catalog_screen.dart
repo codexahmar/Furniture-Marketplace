@@ -27,7 +27,12 @@ class CatalogScreen extends StatefulWidget {
 
 class _CatalogScreenState extends State<CatalogScreen> {
   String _selectedCategory = 'Lounge';
-  final List<String> _categories = const ['Lounge', 'Office', 'Dining', 'Rocking'];
+  final List<String> _categories = const [
+    'Lounge',
+    'Office',
+    'Dining',
+    'Rocking',
+  ];
   late List<Product> _products;
   int _navIndex = 0;
 
@@ -57,25 +62,25 @@ class _CatalogScreenState extends State<CatalogScreen> {
           Positioned.fill(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                top: topPadding + 44,
+                top: topPadding + 10,
                 left: 20,
                 right: 20,
-                bottom: 110,
+                bottom: 120,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header
                   _buildHeader(),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
 
                   // Search Bar
                   _buildSearchBar(),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
 
                   // Categories Horizontal Bar
                   _buildCategories(),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 26),
 
                   // 2-Column Product Grid
                   _buildProductGrid(),
@@ -85,16 +90,22 @@ class _CatalogScreenState extends State<CatalogScreen> {
           ),
 
           // Floating Bottom Navigation Bar
+          // Floating Bottom Navigation Bar (Centered with ample side padding)
           Positioned(
-            left: 20,
-            right: 20,
+            left: 0,
+            right: 0,
             bottom: 24,
-            child: FloatingBottomNav(
-              selectedIndex: _navIndex,
-              favoritesCount: _products.where((p) => p.isFavorite).length,
-              onIndexChanged: (index) {
-                setState(() => _navIndex = index);
-              },
+            child: Center(
+              child: SizedBox(
+                width: 276,
+                child: FloatingBottomNav(
+                  selectedIndex: _navIndex,
+                  favoritesCount: _products.where((p) => p.isFavorite).length,
+                  onIndexChanged: (index) {
+                    setState(() => _navIndex = index);
+                  },
+                ),
+              ),
             ),
           ),
         ],
@@ -115,12 +126,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
             letterSpacing: -0.5,
           ),
         ),
-        // Notification bell with red badge
+        // Notification bell with black badge in front of Catalog text
         CircularIconButton(
-          icon: CupertinoIcons.bell,
+          icon: CupertinoIcons.bell_fill,
           onTap: widget.onOpenHeroPromo,
+          iconColor: Colors.black,
+          iconSize: 20,
           badgeText: '',
-          badgeColor: AppColors.badgeRed,
+          badgeColor: Colors.black,
         ),
       ],
     );
@@ -195,6 +208,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
   Widget _buildProductGrid() {
     return GridView.builder(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: _products.length,
