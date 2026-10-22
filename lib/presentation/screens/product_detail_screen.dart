@@ -40,6 +40,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant ProductDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.product.id != widget.product.id) {
+      _isFavorite = widget.product.isFavorite;
+      _quantity = 1;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final product = widget.product;
     final int totalPrice = product.price * _quantity;
@@ -148,7 +157,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       padding: const EdgeInsets.fromLTRB(28, 0, 28, 40),
                       child: ProductImage(
                         assetPath: product.assetPath,
-                        fallbackUrl: product.fallbackUrl,
                         fit: BoxFit.contain,
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../domain/models/product.dart';
 import '../../data/repositories/mock_product_repository.dart';
 import 'catalog_screen.dart';
 import 'hero_promo_screen.dart';
@@ -19,6 +20,7 @@ class MainNavigationShell extends StatefulWidget {
 
 class _MainNavigationShellState extends State<MainNavigationShell> {
   late final PageController _pageController;
+  Product? _selectedProduct;
 
   @override
   void initState() {
@@ -44,7 +46,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   Widget build(BuildContext context) {
     final catalogProducts = widget.repository.getCatalogProducts();
     final heroProduct = widget.repository.getHeroProduct();
-    final detailProduct = widget.repository.getDetailProduct();
+    final detailProduct = _selectedProduct ?? widget.repository.getDetailProduct();
 
     return Scaffold(
       body: PageView(
@@ -53,14 +55,24 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         children: [
           CatalogScreen(
             products: catalogProducts,
-            onProductSelected: (product) => _navigateToPage(2),
+            onProductSelected: (product) {
+              setState(() {
+                _selectedProduct = product;
+              });
+              _navigateToPage(2);
+            },
             onOpenHeroPromo: () => _navigateToPage(1),
           ),
           HeroPromoScreen(
             heroProduct: heroProduct,
             onBack: () => _navigateToPage(0),
             onShopMore: () => _navigateToPage(0),
-            onSelectHeroProduct: () => _navigateToPage(2),
+            onSelectHeroProduct: () {
+              setState(() {
+                _selectedProduct = heroProduct;
+              });
+              _navigateToPage(2);
+            },
           ),
           ProductDetailScreen(
             product: detailProduct,

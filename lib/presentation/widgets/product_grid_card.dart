@@ -70,7 +70,6 @@ class ProductGridCard extends StatelessWidget {
                       child: Center(
                         child: ProductImage(
                           assetPath: product.assetPath,
-                          fallbackUrl: product.fallbackUrl,
                           fit: BoxFit.contain,
                         ),
                       ),

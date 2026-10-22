@@ -7,7 +7,6 @@ class Product {
   final String discount;
   final String category;
   final String assetPath;
-  final String fallbackUrl;
   final bool isFavorite;
 
   const Product({
@@ -18,7 +17,6 @@ class Product {
     required this.discount,
     required this.category,
     required this.assetPath,
-    required this.fallbackUrl,
     this.isFavorite = false,
   });
 
@@ -30,7 +28,6 @@ class Product {
     String? discount,
     String? category,
     String? assetPath,
-    String? fallbackUrl,
     bool? isFavorite,
   }) {
     return Product(
@@ -41,7 +38,6 @@ class Product {
       discount: discount ?? this.discount,
       category: category ?? this.category,
       assetPath: assetPath ?? this.assetPath,
-      fallbackUrl: fallbackUrl ?? this.fallbackUrl,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }

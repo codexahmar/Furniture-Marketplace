@@ -144,7 +144,6 @@ class HeroPromoScreen extends StatelessWidget {
                                     const EdgeInsets.symmetric(horizontal: 24),
                                 child: ProductImage(
                                   assetPath: heroProduct.assetPath,
-                                  fallbackUrl: heroProduct.fallbackUrl,
                                   fit: BoxFit.contain,
                                 ),
                               ),
