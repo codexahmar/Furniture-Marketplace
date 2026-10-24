@@ -1,17 +1,32 @@
-# furniture_marketplace
+# Furniture Marketplace App UI
 
-A new Flutter project.
+A modern, minimal Flutter e-commerce UI concept for an architectural furniture marketplace, inspired by modern design trends on Dribbble.
 
-## Getting Started
+Focused on clean typography, tactile micro-interactions, fluid Hero transitions, and editorial product presentation.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Design Inspiration
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+![Design Inspiration](assets/images/dribbble_original.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## Highlights & Interactions
+
+- **Interactive Product Showcase & Hero Flights**: Smooth shared element Hero animation transitions each product card seamlessly from the catalog grid into the high-resolution showcase.
+- **Micro-Interactions & Animated CTA**: Three-stage interactive Buy button that transitions smoothly from purchase to order confirmation and into continue shopping with tailored cubic easing.
+- **Top In-App Notification Banner**: Native-style slide-down purchase confirmation notification synchronized with button state transitions.
+- **Architectural Typography**: Clean hierarchy paired with Plus Jakarta Sans and minimal monochrome accents.
+- **Floating Navigation Bar**: Freestanding action buttons with real-time favorite counter and filter states.
+
+---
+
+## Running Locally
+
+Ensure you have Flutter installed on your machine:
+
+```bash
+flutter pub get
+flutter run
+```
