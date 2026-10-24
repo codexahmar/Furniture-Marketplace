@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 
-/// Reusable Floating Bottom Navigation Bar Widget matching Dribbble reference:
-/// Consists of a freestanding circular dark button on the left (Shopping bag)
-/// and a prominent, taller freestanding white pill container on the right (Favorites with count, Cart, Settings).
 class FloatingBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onIndexChanged;
@@ -22,7 +19,6 @@ class FloatingBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // 1. Freestanding Left Circular Black Button (Index 0)
         GestureDetector(
           onTap: () => onIndexChanged(0),
           child: Container(
@@ -48,10 +44,7 @@ class FloatingBottomNav extends StatelessWidget {
             ),
           ),
         ),
-
         const SizedBox(width: 12),
-
-        // 2. Freestanding Right White Pill Container (Taller & more prominent)
         Expanded(
           child: Container(
             height: 60,
@@ -67,7 +60,6 @@ class FloatingBottomNav extends StatelessWidget {
                 ),
               ],
             ),
-            // Unconditionally solid black icons and text
             child: IconTheme(
               data: const IconThemeData(
                 color: Colors.black,
@@ -77,7 +69,6 @@ class FloatingBottomNav extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // Heart Icon with count (Always solid black filled heart)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => onIndexChanged(1),
@@ -101,8 +92,6 @@ class FloatingBottomNav extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  // Bag / Store Icon (Always solid black filled bag)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => onIndexChanged(2),
@@ -115,8 +104,6 @@ class FloatingBottomNav extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // Settings Gear Icon (Always solid black filled gear)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => onIndexChanged(3),

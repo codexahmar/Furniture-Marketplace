@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import '../../domain/models/product.dart';
+import 'package:flutter/cupertino.dart';
 import '../../data/repositories/mock_product_repository.dart';
+import '../../domain/models/product.dart';
 import 'catalog_screen.dart';
 import 'hero_promo_screen.dart';
 import 'product_detail_screen.dart';
 
-/// Main Navigation Shell with PageView
-class MainNavigationShell extends StatefulWidget {
+class MainNavigationShell extends StatelessWidget {
   final ProductRepository repository;
 
   const MainNavigationShell({
@@ -14,72 +13,56 @@ class MainNavigationShell extends StatefulWidget {
     required this.repository,
   });
 
-  @override
-  State<MainNavigationShell> createState() => _MainNavigationShellState();
-}
-
-class _MainNavigationShellState extends State<MainNavigationShell> {
-  late final PageController _pageController;
-  Product? _selectedProduct;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0);
+  void openProductDetail(BuildContext context, Product product) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 400),
+        reverseTransitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return ProductDetailScreen(
+            product: product,
+            heroProduct: repository.getHeroProduct(),
+            onBack: () => Navigator.of(context).pop(),
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+            ),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _navigateToPage(int page) {
-    _pageController.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeInOutCubic,
+  void openHeroPromo(BuildContext context) {
+    final heroProduct = repository.getHeroProduct();
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => HeroPromoScreen(
+          heroProduct: heroProduct,
+          onBack: () => Navigator.of(context).pop(),
+          onShopMore: () => Navigator.of(context).pop(),
+          onSelectHeroProduct: () {
+            openProductDetail(context, heroProduct);
+          },
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final catalogProducts = widget.repository.getCatalogProducts();
-    final heroProduct = widget.repository.getHeroProduct();
-    final detailProduct = _selectedProduct ?? widget.repository.getDetailProduct();
+    final catalogProducts = repository.getCatalogProducts();
 
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const BouncingScrollPhysics(),
-        children: [
-          CatalogScreen(
-            products: catalogProducts,
-            onProductSelected: (product) {
-              setState(() {
-                _selectedProduct = product;
-              });
-              _navigateToPage(2);
-            },
-            onOpenHeroPromo: () => _navigateToPage(1),
-          ),
-          HeroPromoScreen(
-            heroProduct: heroProduct,
-            onBack: () => _navigateToPage(0),
-            onShopMore: () => _navigateToPage(0),
-            onSelectHeroProduct: () {
-              setState(() {
-                _selectedProduct = heroProduct;
-              });
-              _navigateToPage(2);
-            },
-          ),
-          ProductDetailScreen(
-            product: detailProduct,
-            onBack: () => _navigateToPage(0),
-          ),
-        ],
-      ),
+    return CatalogScreen(
+      products: catalogProducts,
+      onProductSelected: (product) => openProductDetail(context, product),
+      onOpenHeroPromo: () => openHeroPromo(context),
     );
   }
 }

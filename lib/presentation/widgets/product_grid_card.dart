@@ -5,9 +5,6 @@ import '../../core/constants/app_colors.dart';
 import '../../domain/models/product.dart';
 import 'product_image.dart';
 
-/// Reusable Product Grid Card Widget matching Dribbble reference:
-/// Pinned discount badge top-right, chair image, product name, price,
-/// and favorite button pinned at the bottom end of each card.
 class ProductGridCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
@@ -38,7 +35,6 @@ class ProductGridCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // 1. Discount Tag (Top Right)
             Positioned(
               top: 12,
               right: 12,
@@ -58,25 +54,23 @@ class ProductGridCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // 2. Chair Content (Image, Name, Price)
             Positioned.fill(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(14, 16, 14, 48),
                 child: Column(
                   children: [
-                    // Chair Image
                     Expanded(
                       child: Center(
-                        child: ProductImage(
-                          assetPath: product.assetPath,
-                          fit: BoxFit.contain,
+                        child: Hero(
+                          tag: 'product-hero-${product.id}',
+                          child: ProductImage(
+                            assetPath: product.assetPath,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 6),
-
-                    // Name
                     Text(
                       product.name,
                       style: GoogleFonts.plusJakartaSans(
@@ -86,8 +80,6 @@ class ProductGridCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-
-                    // Price
                     Text(
                       '\$${product.price}',
                       style: GoogleFonts.plusJakartaSans(
@@ -100,8 +92,6 @@ class ProductGridCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // 3. Circular Favorite Button (Pinned at the end of each card)
             Positioned(
               bottom: 12,
               left: 0,
@@ -109,21 +99,33 @@ class ProductGridCard extends StatelessWidget {
               child: Center(
                 child: GestureDetector(
                   onTap: onFavoriteToggle,
-                  child: Container(
+                  behavior: HitTestBehavior.opaque,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOutCubic,
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
                       color: product.isFavorite
                           ? AppColors.pureBlack
-                          : const Color(0xFFF0F1F3),
+                          : Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      product.isFavorite
-                          ? CupertinoIcons.heart_fill
-                          : CupertinoIcons.heart,
-                      size: 16,
-                      color: product.isFavorite ? Colors.white : Colors.black,
+                    child: Center(
+                      child: AnimatedScale(
+                        scale: product.isFavorite ? 1.06 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutBack,
+                        child: Icon(
+                          product.isFavorite
+                              ? CupertinoIcons.heart_fill
+                              : CupertinoIcons.heart,
+                          size: 16,
+                          color: product.isFavorite
+                              ? Colors.white
+                              : AppColors.pureBlack,
+                        ),
+                      ),
                     ),
                   ),
                 ),

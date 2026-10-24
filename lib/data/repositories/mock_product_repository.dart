@@ -1,13 +1,10 @@
 import '../../domain/models/product.dart';
 
-/// Product Repository Interface
 abstract class ProductRepository {
   List<Product> getCatalogProducts();
   Product getHeroProduct();
-  Product getDetailProduct();
 }
 
-/// Mock Implementation providing data matching the design specification
 class MockProductRepository implements ProductRepository {
   @override
   List<Product> getCatalogProducts() {
@@ -24,6 +21,16 @@ class MockProductRepository implements ProductRepository {
       ),
       Product(
         id: '2',
+        name: 'Flora Shell',
+        subtitle: 'Emerald Fluted Velvet Chair',
+        price: 360,
+        discount: '-15%',
+        category: 'Lounge',
+        assetPath: 'assets/images/chair4.png',
+        isFavorite: false,
+      ),
+      Product(
+        id: '3',
         name: 'Chesterfield',
         subtitle: 'Tufted Leather Club Chair',
         price: 490,
@@ -33,23 +40,13 @@ class MockProductRepository implements ProductRepository {
         isFavorite: false,
       ),
       Product(
-        id: '3',
+        id: '4',
         name: 'Nordvalla',
         subtitle: 'Indigo Woven Wingback',
         price: 285,
         discount: '-5%',
         category: 'Lounge',
         assetPath: 'assets/images/chair3.png',
-        isFavorite: false,
-      ),
-      Product(
-        id: '4',
-        name: 'Flora Shell',
-        subtitle: 'Emerald Fluted Velvet Chair',
-        price: 360,
-        discount: '-15%',
-        category: 'Lounge',
-        assetPath: 'assets/images/chair4.png',
         isFavorite: false,
       ),
     ];
@@ -66,21 +63,6 @@ class MockProductRepository implements ProductRepository {
       category: 'Exclusive',
       assetPath: 'assets/images/chair4.png',
       isFavorite: false,
-    );
-  }
-
-  @override
-  Product getDetailProduct() {
-    return const Product(
-      id: 'detail',
-      name: 'Flora Shell Chair',
-      subtitle:
-          'A sculptural, ergonomic lounge chair designed with fluted emerald velvet upholstery and tapered brass legs.',
-      price: 360,
-      discount: '-15%',
-      category: 'Lounge',
-      assetPath: 'assets/images/chair4.png',
-      isFavorite: true,
     );
   }
 }

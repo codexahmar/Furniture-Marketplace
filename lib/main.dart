@@ -7,7 +7,6 @@ void main() {
   runApp(const FurnitureMarketplaceApp());
 }
 
-/// Root Application Widget
 class FurnitureMarketplaceApp extends StatelessWidget {
   const FurnitureMarketplaceApp({super.key});
 

@@ -1,4 +1,3 @@
-/// Product Domain Model
 class Product {
   final String id;
   final String name;

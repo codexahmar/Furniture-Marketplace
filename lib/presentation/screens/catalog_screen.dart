@@ -1,24 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../domain/models/product.dart';
-import '../widgets/category_pill.dart';
-import '../widgets/circular_icon_button.dart';
+import '../controllers/catalog_controller.dart';
+import '../widgets/catalog_header.dart';
+import '../widgets/catalog_product_grid.dart';
+import '../widgets/catalog_search_bar.dart';
+import '../widgets/category_filter_list.dart';
 import '../widgets/floating_bottom_nav.dart';
-import '../widgets/product_grid_card.dart';
 
-/// Catalog Screen (Screen 1)
 class CatalogScreen extends StatefulWidget {
   final List<Product> products;
   final ValueChanged<Product> onProductSelected;
   final VoidCallback onOpenHeroPromo;
+  final CatalogController? controller;
 
   const CatalogScreen({
     super.key,
     required this.products,
     required this.onProductSelected,
     required this.onOpenHeroPromo,
+    this.controller,
   });
 
   @override
@@ -26,28 +27,26 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  String _selectedCategory = 'Lounge';
-  final List<String> _categories = const [
-    'Lounge',
-    'Office',
-    'Dining',
-    'Rocking',
-  ];
-  late List<Product> _products;
-  int _navIndex = 0;
+  late final CatalogController controller;
+  bool isInternalController = false;
 
   @override
   void initState() {
     super.initState();
-    _products = List.from(widget.products);
+    if (widget.controller != null) {
+      controller = widget.controller!;
+    } else {
+      controller = CatalogController(initialProducts: widget.products);
+      isInternalController = true;
+    }
   }
 
-  void _toggleFavorite(int index) {
-    setState(() {
-      _products[index] = _products[index].copyWith(
-        isFavorite: !_products[index].isFavorite,
-      );
-    });
+  @override
+  void dispose() {
+    if (isInternalController) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -56,176 +55,69 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.bgLight,
-      body: Stack(
-        children: [
-          // Scrollable Content
-          Positioned.fill(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                top: topPadding + 10,
-                left: 20,
-                right: 20,
-                bottom: 120,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  _buildHeader(),
-                  const SizedBox(height: 20),
-
-                  // Search Bar
-                  _buildSearchBar(),
-                  const SizedBox(height: 20),
-
-                  // Categories Horizontal Bar
-                  _buildCategories(),
-                  const SizedBox(height: 26),
-
-                  // 2-Column Product Grid
-                  _buildProductGrid(),
-                ],
-              ),
-            ),
-          ),
-
-          // Floating Bottom Navigation Bar
-          // Floating Bottom Navigation Bar (Centered with ample side padding)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 24,
-            child: Center(
-              child: SizedBox(
-                width: 276,
-                child: FloatingBottomNav(
-                  selectedIndex: _navIndex,
-                  favoritesCount: _products.where((p) => p.isFavorite).length,
-                  onIndexChanged: (index) {
-                    setState(() => _navIndex = index);
-                  },
+      body: ListenableBuilder(
+        listenable: controller,
+        builder: (context, _) {
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    top: topPadding + 10,
+                    left: 20,
+                    right: 20,
+                    bottom: 120,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CatalogHeader(
+                        onNotificationTap: widget.onOpenHeroPromo,
+                      ),
+                      const SizedBox(height: 20),
+                      const CatalogSearchBar(),
+                      const SizedBox(height: 20),
+                      CategoryFilterList(
+                        categories: controller.categories,
+                        selectedCategory: controller.selectedCategory,
+                        onCategorySelected: controller.selectCategory,
+                      ),
+                      const SizedBox(height: 24),
+                      CatalogProductGrid(
+                        products: controller.displayedProducts,
+                        onProductTap: widget.onProductSelected,
+                        onFavoriteToggle: (product) {
+                          controller.toggleFavorite(product.id);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Catalog',
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 28,
-            fontWeight: FontWeight.w800,
-            color: AppColors.pureBlack,
-            letterSpacing: -0.5,
-          ),
-        ),
-        // Notification bell with black badge in front of Catalog text
-        CircularIconButton(
-          icon: CupertinoIcons.bell_fill,
-          onTap: widget.onOpenHeroPromo,
-          iconColor: Colors.black,
-          iconSize: 20,
-          badgeText: '',
-          badgeColor: Colors.black,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            CupertinoIcons.search,
-            size: 20,
-            color: AppColors.mutedGray,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Search',
-              style: GoogleFonts.plusJakartaSans(
-                color: AppColors.mutedGray,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 24,
+                child: Center(
+                  child: SizedBox(
+                    width: 276,
+                    child: FloatingBottomNav(
+                      selectedIndex: controller.navIndex,
+                      favoritesCount: controller.favoritesCount,
+                      onIndexChanged: (index) {
+                        controller.setNavIndex(index);
+                        if (index == 2) {
+                          widget.onOpenHeroPromo();
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const Icon(
-            CupertinoIcons.slider_horizontal_3,
-            size: 20,
-            color: AppColors.pureBlack,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategories() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Row(
-        children: _categories.map((category) {
-          final isSelected = category == _selectedCategory;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: CategoryPill(
-              label: category,
-              isSelected: isSelected,
-              onTap: () {
-                setState(() {
-                  _selectedCategory = category;
-                });
-              },
-            ),
+            ],
           );
-        }).toList(),
+        },
       ),
-    );
-  }
-
-  Widget _buildProductGrid() {
-    return GridView.builder(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: _products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 14,
-        mainAxisSpacing: 14,
-        childAspectRatio: 0.72,
-      ),
-      itemBuilder: (context, index) {
-        final product = _products[index];
-        return ProductGridCard(
-          product: product,
-          onTap: () => widget.onProductSelected(product),
-          onFavoriteToggle: () => _toggleFavorite(index),
-        );
-      },
     );
   }
 }

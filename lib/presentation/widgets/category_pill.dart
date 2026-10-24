@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 
-/// Reusable Category Filter Pill:
-/// Active ("Lounge") is black background with white text.
-/// Inactive ("Office", "Dining", etc.) is white background with black text.
+
 class CategoryPill extends StatelessWidget {
   final String label;
   final bool isSelected;
